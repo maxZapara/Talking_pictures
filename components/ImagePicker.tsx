@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Alert, Button, Image, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function ImagePickerExample() {
-  const [image, setImage] = useState<string | null>(null);
+type ImagePickerExampleProps = {
+    onImageSelected: (imagePath: string) => void;
+}
 
+export default function ImagePickerExample({onImageSelected}: ImagePickerExampleProps) {
   const pickImage = async (useCamera=false) => {
     if (useCamera) {
             const { granted } = await ImagePicker.requestCameraPermissionsAsync();
@@ -35,7 +37,7 @@ export default function ImagePickerExample() {
     console.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      onImageSelected(result.assets[0].uri);
     }
   };
 
@@ -57,14 +59,12 @@ export default function ImagePickerExample() {
       <TouchableOpacity onPress={showOptions} style={styles.button}>
         <Text style={{ color: 'white' }}>Pick an image</Text>
       </TouchableOpacity>
-      {image && <Image source={{ uri: image }} style={styles.image} />}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -74,10 +74,20 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: '#003b7e',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginBottom: 20,
-  },
+        // flex: 1,
+        backgroundColor: "purple",
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 10,
+        alignItems: "center",
+        minHeight: 40,
+        marginHorizontal: 20
+
+    },
+    buttonText: {
+        color: "white",
+        fontSize: 18,
+        fontWeight: 600
+    }
+  
 });
